@@ -1,0 +1,22 @@
+pip install django
+pip install django-environ
+
+django-admin startproject myproject .
+python manage.py startapp start
+python manage.py runserver
+python manage.py createsuperuser
+python manage.py shell
+
+-------------------
+pip freeze > requirements.txt
+-------------------
+Docker
+
+sudo docker-compose up --build
+sudo docker-compose exec web python manage.py migrate
+sudo docker-compose exec web python manage.py createsuperuser
+-------------------
+
+python -m unittest test_rw_json.py
+python -m unittest test_text_processing.py
+python -m unittest discover -s . -p "*.py"
