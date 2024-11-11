@@ -11,22 +11,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: ${{ secrets.DB_NAME }}
-          MYSQL_USER: ${{ secrets.DB_USER }}
-          MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD }}
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
     - uses: actions/checkout@v2
 
@@ -45,11 +29,17 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_HOST: ${{ secrets.DB_HOST }}  # External VPS address or hostname
         DB_PORT: ${{ secrets.DB_PORT }}
       run: |
         python manage.py migrate
 
     - name: Run tests
+      env:
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
       run: |
         pytest ./hw_test/test_app.py
